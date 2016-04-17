@@ -7,14 +7,19 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 public class Tile {
-  public static final int SIZE = 60;
+  public static final int WIDTH = 60;
+  public static final int HEIGHT = 60;
   public static final int SPEED = 5;
+
   public static final int ARC_SIZE = 15;
   private int value;
   private BufferedImage tileImage;
   private Color background;
   private Font font;
   private Point slideTo;
+
+  private final int RECT_X = 0;
+  private final int RECT_Y = 0;
   private int x;
   private int y;
 
@@ -25,14 +30,14 @@ public class Tile {
     this.x = x;
     this.y = y;
     slideTo = new Point(x, y);
-    tileImage = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_RGB);
+    tileImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     drawImage();
   }
 
   private void drawImage() {
     Graphics2D g = (Graphics2D) tileImage.getGraphics();
     switch (value) {
-      case 0: 
+      case 0:
         background = Color.BLACK;
         break;
       case 2:
@@ -73,10 +78,10 @@ public class Tile {
         break;
     }
     g.setColor(Color.DARK_GRAY);
-    g.fillRect(0, 0, SIZE, SIZE);
+    g.fillRect(RECT_X, RECT_Y, WIDTH, HEIGHT);
 
     g.setColor(background);
-    g.fillRoundRect(0, 0, SIZE, SIZE, ARC_SIZE, ARC_SIZE);
+    g.fillRoundRect(RECT_X, RECT_Y, WIDTH, HEIGHT, ARC_SIZE, ARC_SIZE);
 
     g.setColor(Color.BLACK);
 
@@ -88,8 +93,8 @@ public class Tile {
     g.setFont(font);
 
     if (value != 0) {
-      int DrawX = SIZE / 2 - DrawUtils.getMessageWidth("" + value, font, g) / 2;
-      int DrawY = SIZE / 2 + DrawUtils.getMessageHeight("" + value, font, g) / 2;
+      int DrawX = WIDTH / 2 - DrawUtils.getMessageWidth("" + value, font, g) / 2;
+      int DrawY = HEIGHT / 2 + DrawUtils.getMessageHeight("" + value, font, g) / 2;
       g.drawString("" + value, DrawX, DrawY);
     }
     g.dispose();
@@ -108,7 +113,7 @@ public class Tile {
     drawImage();
   }
 
-  public boolean CanCombine() {
+  public boolean isCanCombine() {
     return canCombine;
   }
 
@@ -140,5 +145,4 @@ public class Tile {
     this.slideTo = slideTo;
 
   }
-
 }

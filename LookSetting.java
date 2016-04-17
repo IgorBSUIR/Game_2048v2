@@ -14,54 +14,78 @@ public class LookSetting extends JFrame {
   private JRadioButton metalRadioButton;
   private JRadioButton systemRadioButton;
   private JButton okButton;
-  
-  
+
+  public final int WIDTH = 320;
+  public final int HEIGHT = 320;
+
+  private final int OK_X = 110;
+  private final int OK_Y = 200;
+  private final int OK_WIDTH = 100;
+  private final int OK_HEIGHT = 30;
+
+  private final int METAL_X = 90;
+  private final int METAL_Y = 50;
+
+  private final int SYSTEM_X = 90;
+  private final int SYSTEM_Y = 85;
+
+  private final int METAL_B_X = 60;
+  private final int METAL_B_Y = 60;
+  private final int METAL_B_WIDTH = 20;
+  private final int METAL_B_HEIGHT = 20;
+
+  private final int SYSTEM_B_X = 60;
+  private final int SYSTEM_B_Y = 95;
+  private final int SYSTEM_B_WIDTH = 20;
+  private final int SYSTEM_B_HEIGHT = 20;
+
   public LookSetting() {
-    this.setTitle("Sitting");
-    setSize(320, 320);
+    this.setTitle("Setting");
+    setSize(WIDTH, HEIGHT);
     setLayout(null);
     setBackground(Color.WHITE);
     setLocationRelativeTo(null);
+
     okButton = new JButton("Ok");
-    okButton.setBounds(110, 200, 100, 30);
+    okButton.setBounds(OK_X, OK_Y, OK_WIDTH, OK_HEIGHT);
     add(okButton);
 
-    add(new TextLabel("Metal LookAndFeel", 90, 50));
+    add(new TextLabel("Metal LookAndFeel", METAL_X, METAL_Y));
     metalRadioButton = new JRadioButton("Metal");
-    metalRadioButton.setBounds(60, 60, 20, 20);
+    metalRadioButton.setBounds(METAL_B_X, METAL_B_Y, METAL_B_WIDTH, METAL_B_HEIGHT);
     metalRadioButton.setSelected(true);
     add(metalRadioButton);
 
-    add(new TextLabel("System LookAndFeel", 90, 85));
+    add(new TextLabel("System LookAndFeel", SYSTEM_X, SYSTEM_Y));
     systemRadioButton = new JRadioButton("System");
-    systemRadioButton.setBounds(60, 95, 20, 20);
+    systemRadioButton.setBounds(SYSTEM_B_X, SYSTEM_B_Y, SYSTEM_B_WIDTH, SYSTEM_B_HEIGHT);;
     add(systemRadioButton);
 
     setEvent();
   }
-  
-  private void setEvent(){
-    
+
+  private void setEvent() {
+
     okButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         Main.closeSetting();
       }
     });
-    
-  metalRadioButton.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-      metalRadioButton.setSelected(true);
-      systemRadioButton.setSelected(false);
-      Main.initMetalLook();
-    }
-  });
 
-  systemRadioButton.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-      systemRadioButton.setSelected(true);
-      metalRadioButton.setSelected(false);
-      Main.initSystemLook();
-    }
-  });
+    metalRadioButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        metalRadioButton.setSelected(true);
+        systemRadioButton.setSelected(false);
+        Main.initMetalLook();
+      }
+    });
+
+    systemRadioButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        systemRadioButton.setSelected(true);
+        metalRadioButton.setSelected(false);
+        Main.initSystemLook();
+      }
+    });
   }
 }

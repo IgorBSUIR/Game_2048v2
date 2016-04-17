@@ -13,18 +13,39 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class Game extends JPanel implements /* KeyListener, */ Runnable {
+public class Game extends JPanel implements Runnable {
 
-  public Keyboard key = new Keyboard();
-  public static int score = 0;
-  public static int hightScore = 0;
+  private int hightScore = 0;
   public int level;
-  private final int TIME=50;
+
+  private final int TIME = 50;
   private static final long serialVersionUID = 1L;
+
   public static final int WIDTH = 450;
   public static final int HEIGHT = 320;
-  private static final int imageX = 10;
-  private static final int imageY = 10;
+  private static final int IMAGE_X = 10;
+  private static final int IMAGE_Y = 10;
+
+  private final int TEXT_SCORE_X = 320;
+  private final int TEXT_SCORE_Y = 90;
+
+  private final int TEXT_H_SCORE_X = 320;
+  private final int TEXT_H_SCORE_Y = 150;
+
+  private final int H_SCORE_LBL_X = 320;
+  private final int H_SCORE_LBL_Y = 170;
+
+  private final int SCORE_LBL_X = 320;
+  private final int SCORE_LBL_Y = 110;
+
+  private final int TEXT_NAME_X = 340;
+  private final int TEXT_NAME_Y = 10;
+
+  private final int BUTTON_X = 320;
+  private final int BUTTON_Y = 50;
+  private final int BUTTON_WIDTH = 100;
+  private final int BUTTON_HEIGHT = 30;
+
   public static final Font main = new Font("FONT", Font.PLAIN, 28);
   private Thread game;
   private TextLabel scoreLabel;
@@ -38,34 +59,31 @@ public class Game extends JPanel implements /* KeyListener, */ Runnable {
 
   public Game(int level) {
     setLayout(null);
-    this.level=level;
+    this.level = level;
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-    board = new GameBoard(0, 0, level);
+    board = new GameBoard(level);
 
     setBackground(Color.WHITE);
     menuButton = new JButton("Menu");
-    menuButton.setBounds(320, 50, 100, 30);
+    menuButton.setBounds(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
     add(menuButton);
     setAction();
 
-    add(new TextLabel("Score: ", 320, 90));
+    add(new TextLabel("Score: ", TEXT_SCORE_X, TEXT_SCORE_Y));
 
-    add(new TextLabel("Hight Score:", 320, 150));
+    add(new TextLabel("Hight Score:", TEXT_H_SCORE_X, TEXT_H_SCORE_Y));
 
-    add(new TextLabel("2048", 340, 10));
+    add(new TextLabel("2048", TEXT_NAME_X, TEXT_NAME_Y));
 
-    scoreLabel = new TextLabel(Integer.toString(score), 320, 110);
+    scoreLabel = new TextLabel(Integer.toString(board.getScore()), SCORE_LBL_X, SCORE_LBL_Y);
     add(scoreLabel);
 
-    hightScoreLabel = new TextLabel(Integer.toString(hightScore), 320, 170);
+    hightScoreLabel = new TextLabel(Integer.toString(hightScore), H_SCORE_LBL_X, H_SCORE_LBL_Y);
     add(hightScoreLabel);
 
     addKeyListener(new Keyboard());
     setFocusable(true);
-    setFocusTraversalKeysEnabled(false);
-    
-    
   }
 
 
@@ -79,38 +97,38 @@ public class Game extends JPanel implements /* KeyListener, */ Runnable {
     board.render(graphic);
 
     Graphics2D g2d = (Graphics2D) this.getGraphics();
-    g2d.drawImage(image, imageX, imageY, null);
+    g2d.drawImage(image, IMAGE_X, IMAGE_Y, null);
     g2d.dispose();
   }
 
-  private void updateScore(){
-    scoreLabel.setText(Integer.toString(score));
-    if(hightScore < score){
-      hightScore = score;
+  private void updateScore() {
+    scoreLabel.setText(Integer.toString(board.getScore()));
+    if (hightScore < board.getScore()) {
+      hightScore = board.getScore();
       hightScoreLabel.setText(Integer.toString(hightScore));
     }
   }
-  
+
   @Override
   public void run() {
     int time = TIME;
     while (running) {
-      if(autoGame){
-        if(time == 50){
+      if (autoGame) {
+        if (time == TIME) {
           getKeyAuto();
         }
         time--;
-        if(time == 0){
+        if (time == 0) {
           time = TIME;
         }
       }
-      if(board.getWon()){
+      if (board.getWon()) {
         new FinalWindow("won");
-        running =false;
+        running = false;
       }
-      if(board.getDead()){
+      if (board.getDead()) {
         new FinalWindow("dead");
-        running =false;
+        running = false;
       }
       update();
       render();
@@ -144,7 +162,7 @@ public class Game extends JPanel implements /* KeyListener, */ Runnable {
     });
   }
 
-  private void getKeyAuto(){
+  private void getKeyAuto() {
     Random random = new Random();
     switch (random.nextInt(4)) {
       case 0:
@@ -158,6 +176,8 @@ public class Game extends JPanel implements /* KeyListener, */ Runnable {
         break;
       case 3:
         Keyboard.setPressedTrue(KeyEvent.VK_DOWN);
+        break;
+      default:
         break;
     }
   }

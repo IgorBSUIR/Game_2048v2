@@ -32,7 +32,7 @@ public class Main {
     }
     game = new Game(level.getLevel());
     level = null;
-    mainWindow.setVisible(false); 
+    mainWindow.setVisible(false);
     mainWindow.add(game);
     game.start();
     mainWindow.pack();
@@ -48,11 +48,11 @@ public class Main {
     mainWindow.repaint();
   }
 
-  public static void setLevel(){
+  public static void setLevel() {
     level = new Level();
     level.setVisible(true);
   }
-  
+
   public static void openSetting() {
     if (setting == null) {
       setting = new LookSetting();

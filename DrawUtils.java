@@ -2,7 +2,6 @@ package by.bsuir.igor;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 
 public class DrawUtils {
@@ -15,9 +14,7 @@ public class DrawUtils {
 
   public static int getMessageHeight(String message, Font font, Graphics2D g) {
     g.setFont(font);
-    if (message.length() == 0)
-      return 0;
-    TextLayout text = new TextLayout(message, font, g.getFontRenderContext());
-    return (int) text.getBounds().getHeight();
+    Rectangle2D bounds = g.getFontMetrics().getStringBounds(message, g);
+    return (int) bounds.getHeight() - 20;
   }
 }
