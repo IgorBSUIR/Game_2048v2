@@ -25,6 +25,13 @@ public class Tile {
 
   private boolean canCombine = true;
 
+  /**
+   * constructor
+   * 
+   * @param value
+   * @param x
+   * @param y
+   */
   public Tile(int value, int x, int y) {
     this.value = value;
     this.x = x;
@@ -34,11 +41,14 @@ public class Tile {
     drawImage();
   }
 
+  /**
+   * create image of tile
+   */
   private void drawImage() {
     Graphics2D g = (Graphics2D) tileImage.getGraphics();
     switch (value) {
       case 0:
-        background = Color.BLACK;
+        background = Color.RED;
         break;
       case 2:
         background = new Color(0xFFE500);
@@ -100,47 +110,102 @@ public class Tile {
     g.dispose();
   }
 
+  /**
+   * function renders a tile on the 2d object
+   * 
+   * @param graphic
+   */
   public void render(Graphics2D graphic) {
     graphic.drawImage(tileImage, x, y, null);
   }
 
+  /**
+   * returns value of tile
+   * 
+   * @return
+   */
   public int getValue() {
     return value;
   }
 
+  /**
+   * sets value of tile
+   * 
+   * @param value
+   */
   public void setValue(int value) {
     this.value = value;
     drawImage();
   }
 
+  /**
+   * returns canCombine
+   * 
+   * @return
+   */
   public boolean isCanCombine() {
     return canCombine;
   }
 
+  /**
+   * sets canCombine
+   * 
+   * @param canCombine
+   */
   public void setCanCombine(boolean canCombine) {
     this.canCombine = canCombine;
   }
 
+  /**
+   * returns point
+   * 
+   * @return
+   */
   public Point getSlideTo() {
     return slideTo;
   }
 
+  /**
+   * returns x
+   * 
+   * @return
+   */
   public int getX() {
     return x;
   }
 
+  /**
+   * sets x
+   * 
+   * @param x
+   */
   public void setX(int x) {
     this.x = x;
   }
 
+  /**
+   * return y
+   * 
+   * @return
+   */
   public int getY() {
     return y;
   }
 
+  /**
+   * set y
+   * 
+   * @param y
+   */
   public void setY(int y) {
     this.y = y;
   }
 
+  /**
+   * sets point
+   * 
+   * @param slideTo
+   */
   public void setSlideTo(Point slideTo) {
     this.slideTo = slideTo;
 

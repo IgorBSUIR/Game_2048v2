@@ -28,14 +28,30 @@ public class Keyboard implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {}
 
+  /**
+   * returns the state of the key
+   * 
+   * @param key
+   * @return
+   */
   public static boolean getPressed(int key) {
     return pressed[key - KeyEvent.VK_LEFT];
   }
 
+  /**
+   * sets a false state
+   * 
+   * @param key
+   */
   public static void setPressedFalse(int key) {
     pressed[key - KeyEvent.VK_LEFT] = false;
   }
 
+  /**
+   * sets a true state
+   * 
+   * @param key
+   */
   public static void setPressedTrue(int key) {
     pressed[key - KeyEvent.VK_LEFT] = true;
   }

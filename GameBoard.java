@@ -8,24 +8,28 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class GameBoard {
+  Files file = new Files();
 
   public static final int LINES = 4;
   public static final int COLUMNS = 4;
 
-  private int score = 0;
+  protected int score = 0;
 
-  private int startTiles = 2;
-  private Tile[][] board;
-  private boolean won;
-  private boolean dead;
-  private BufferedImage gameBoard;
-  private BufferedImage finalBoard;
-  private final int X = 0;
-  private final int Y = 0;
+  protected int startTiles = 2;
+  protected Tile[][] board;
+  protected boolean won;
+  protected boolean dead;
+  protected BufferedImage gameBoard;
+  protected BufferedImage finalBoard;
+  protected final int X = 0;
+  protected final int Y = 0;
 
-  private static int SPACING = 10;
+  protected static int SPACING = 10;
+  boolean canMove;
   public static int BOARD_WIDTH = (COLUMNS + 1) * SPACING + COLUMNS * Tile.WIDTH;
   public static int BOARD_HEIGHT = (LINES + 1) * SPACING + COLUMNS * Tile.HEIGHT;
+
+  protected GameBoard() {}
 
   public GameBoard(int level) {
     board = new Tile[LINES][COLUMNS];
@@ -35,7 +39,10 @@ public class GameBoard {
     start(level);
   }
 
-  private void createBoardImage() {
+  /**
+   * function creates an image of the board
+   */
+  protected void createBoardImage() {
     Graphics2D graphics = (Graphics2D) gameBoard.getGraphics();
     graphics.setColor(Color.darkGray);
     graphics.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
@@ -50,6 +57,11 @@ public class GameBoard {
     }
   }
 
+  /**
+   * function rendering board
+   * 
+   * @param graphic element 2d graphics, where the board will be located
+   */
   public void render(Graphics2D graphic) {
     Graphics2D graphic_2 = (Graphics2D) finalBoard.getGraphics();
     graphic_2.drawImage(gameBoard, X, Y, null);
@@ -67,7 +79,11 @@ public class GameBoard {
     graphic_2.dispose();
   }
 
-  public void update() {
+  /**
+   * function update board and check whether the player has won
+   */
+
+  void update() {
     checkKeys();
 
     for (int line = 0; line < LINES; line++) {
@@ -84,7 +100,14 @@ public class GameBoard {
     }
   }
 
-  private void resetPosition(Tile current, int line, int column) {
+  /**
+   * function function produces displacement of the tiles
+   * 
+   * @param current current tile
+   * @param line line, which is located tiles
+   * @param column column, which is located tiles
+   */
+  protected void resetPosition(Tile current, int line, int column) {
     if (current == null) {
       return;
     }
@@ -116,7 +139,17 @@ public class GameBoard {
 
   }
 
-  private boolean move(int line, int column, int horizontalDirection, int verticalDirection,
+  /**
+   * function produces the offset tile in the right direction
+   * 
+   * @param line
+   * @param column
+   * @param horizontalDirection
+   * @param verticalDirection
+   * @param dir - direction
+   * @return
+   */
+  protected boolean move(int line, int column, int horizontalDirection, int verticalDirection,
       Direction dir) {
     boolean canMove = false;
     Tile current = board[line][column];
@@ -158,7 +191,7 @@ public class GameBoard {
     return canMove;
   }
 
-  private boolean checkOutOfBorder(Direction dir, int line, int column) {
+  protected boolean checkOutOfBorder(Direction dir, int line, int column) {
     switch (dir) {
       case LEFT:
         return column < 0;
@@ -168,12 +201,20 @@ public class GameBoard {
         return line < 0;
       case DOWN:
         return line > LINES - 1;
+      default:
+        break;
     }
     return false;
   }
 
+  /**
+   * offset function tiles on the board in a certain direction
+   * 
+   * @param dir - direction
+   */
+
   private void movingTiles(Direction dir) {
-    boolean canMove = false;
+    canMove = false;
     int horizontalDirection = 0;
     int verticalDirection = 0;
 
@@ -230,6 +271,8 @@ public class GameBoard {
           }
         }
         break;
+      default:
+        break;
     }
 
     for (int line = 0; line < LINES; line++) {
@@ -242,12 +285,15 @@ public class GameBoard {
     }
 
     if (canMove) {
-      spawnRandom(true);
+      spawnRandom(true, dir);
       checkDead();
     }
   }
 
-  private void checkDead() {
+  /**
+   * function check on possible moves
+   */
+  protected void checkDead() {
     for (int line = 0; line < LINES; line++) {
       for (int column = 0; column < COLUMNS; column++) {
         if (board[line][column] == null) {
@@ -261,7 +307,15 @@ public class GameBoard {
     dead = true;
   }
 
-  private boolean checkSurroundingTile(int line, int column, Tile current) {
+  /**
+   * the function checks whether the tile is somewhere will move
+   * 
+   * @param line
+   * @param column
+   * @param current
+   * @return
+   */
+  protected boolean checkSurroundingTile(int line, int column, Tile current) {
     if (line > 0) {
       Tile check = board[line - 1][column];
       if (check == null) {
@@ -301,6 +355,9 @@ public class GameBoard {
     return false;
   }
 
+  /**
+   * check pressed key
+   */
   private void checkKeys() {
 
     if (Keyboard.getPressed(KeyEvent.VK_LEFT)) {
@@ -321,16 +378,26 @@ public class GameBoard {
     }
   }
 
+  /**
+   * initial filling of the board
+   * 
+   * @param level
+   */
   private void start(int level) {
     if (level == 1) {
-      spawnRandom(false);
+      spawnRandom(false, Direction.NULL);
     }
     for (int i = 0; i < startTiles; i++) {
-      spawnRandom(true);
+      spawnRandom(true, Direction.NULL);
     }
   }
 
-  private void spawnRandom(boolean flag) {
+  /**
+   * randomly creating tiles
+   * 
+   * @param flag
+   */
+  private void spawnRandom(boolean flag, Direction dir) {
     Random random = new Random();
     boolean notValid = true;
     while (notValid) {
@@ -348,27 +415,64 @@ public class GameBoard {
         Tile tile = new Tile(value, getTileX(column), getTileY(line));
         board[line][column] = tile;
         notValid = false;
+        file.writeSave(dir, value, line, column);
       }
     }
   }
 
-  private int getTileX(int column) {
+  /**
+   * obtaining coordinates of column
+   * 
+   * @param column
+   * @return
+   */
+  protected int getTileX(int column) {
     return SPACING + column * Tile.WIDTH + SPACING * column;
   }
 
-  private int getTileY(int line) {
+  /**
+   * obtaining coordinates of line
+   * 
+   * @param line
+   * @return
+   */
+  protected int getTileY(int line) {
     return SPACING + line * Tile.HEIGHT + line * SPACING;
   }
 
+  /**
+   * returns dead
+   * 
+   * @return
+   */
   public boolean getDead() {
     return dead;
   }
 
+  /**
+   * returns won
+   * 
+   * @return
+   */
   public boolean getWon() {
     return won;
   }
 
+  /**
+   * score
+   * 
+   * @return
+   */
   public int getScore() {
     return score;
   }
+
+  public boolean isMove() {
+    return canMove;
+  }
+
+  void incCount() {
+    // TODO Auto-generated method stub
+  }
+
 }

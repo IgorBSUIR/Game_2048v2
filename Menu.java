@@ -14,6 +14,7 @@ public class Menu extends JPanel {
   private static final long serialVersionUID = 6075827594387738441L;
   private JButton resumeGameButton;
   private JButton newGameButton;
+  private JButton replayButton;
   private JButton sittingButton;
   private JButton exitButton;
 
@@ -26,14 +27,19 @@ public class Menu extends JPanel {
   private final int IMAGE_HEIGHT = 320;
 
   private final int RESUME_B_X = 80;
-  private final int RESUME_B_Y = 120;
+  private final int RESUME_B_Y = 80;
   private final int RESUME_B_WIDTH = 160;
   private final int RESUME_B_HEIGHT = 30;
 
   private final int NEW_GMAE_B_X = 80;
-  private final int NEW_GMAE_B_Y = 160;
+  private final int NEW_GMAE_B_Y = 120;
   private final int NEW_GMAE_B_WIDTH = 160;
   private final int NEW_GMAE_B_HEIGHT = 30;
+
+  private final int REPLAY_B_X = 80;
+  private final int REPLAY_B_Y = 160;
+  private final int REPLAY_B_WIDTH = 160;
+  private final int REPLAY_B_HEIGHT = 30;
 
   private final int SETTING_B_X = 80;
   private final int SETTING_B_Y = 200;
@@ -45,7 +51,9 @@ public class Menu extends JPanel {
   private final int EXIT_B_WIDTH = 160;
   private final int EXIT_B_HEIGHT = 30;
 
-
+  /**
+   * constructor
+   */
   public Menu() {
     setLayout(null);
     JLabel imageLabel = new JLabel(new ImageIcon("pr_source.png"));
@@ -61,6 +69,10 @@ public class Menu extends JPanel {
     newGameButton.setBounds(NEW_GMAE_B_X, NEW_GMAE_B_Y, NEW_GMAE_B_WIDTH, NEW_GMAE_B_HEIGHT);
     add(newGameButton);
 
+    replayButton = new JButton("Replay");
+    replayButton.setBounds(REPLAY_B_X, REPLAY_B_Y, REPLAY_B_WIDTH, REPLAY_B_HEIGHT);
+    add(replayButton);
+
     sittingButton = new JButton("Setting");
     sittingButton.setBounds(SETTING_B_X, SETTING_B_Y, SETTING_B_WIDTH, SETTING_B_HEIGHT);
     add(sittingButton);
@@ -74,6 +86,9 @@ public class Menu extends JPanel {
 
   }
 
+  /**
+   * function sets event on button
+   */
   private void setAction() {
 
     resumeGameButton.addActionListener(new ActionListener() {
@@ -84,6 +99,11 @@ public class Menu extends JPanel {
     newGameButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent event) {
         Main.setLevel();
+      }
+    });
+    replayButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        Main.startReplay();
       }
     });
     sittingButton.addActionListener(new ActionListener() {

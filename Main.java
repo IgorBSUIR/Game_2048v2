@@ -1,5 +1,8 @@
 package by.bsuir.igor;
 
+import java.io.File;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -13,6 +16,11 @@ public class Main {
   private static JFrame mainWindow;
   private static Level level;
 
+  /**
+   * constructor
+   * 
+   * @param args
+   */
   public static void main(String[] args) {
     mainWindow = new JFrame("2048");
     menu = new Menu();
@@ -24,13 +32,16 @@ public class Main {
 
   }
 
+  /**
+   * function call new Game
+   */
   public static void runGame() {
     menu.setVisible(false);
     if (game != null) {
       game.stop();
       game = null;
     }
-    game = new Game(level.getLevel());
+    game = new Game(level.getLevel(), null);
     level = null;
     mainWindow.setVisible(false);
     mainWindow.add(game);
@@ -39,6 +50,9 @@ public class Main {
     mainWindow.setVisible(true);
   }
 
+  /**
+   * function opens a window game
+   */
   public static void exitToMenu() {
     game.stop();
     game.setVisible(false);
@@ -48,11 +62,17 @@ public class Main {
     mainWindow.repaint();
   }
 
+  /**
+   * function opens a window level
+   */
   public static void setLevel() {
     level = new Level();
     level.setVisible(true);
   }
 
+  /**
+   * function opens a setting
+   */
   public static void openSetting() {
     if (setting == null) {
       setting = new LookSetting();
@@ -60,10 +80,16 @@ public class Main {
     setting.setVisible(true);
   }
 
+  /**
+   * function pressed button exit
+   */
   public static void exitGame() {
     System.exit(0);
   }
 
+  /**
+   * function opens a window game again
+   */
   public static void resumeGame() {
     if (game == null) {
       return;
@@ -77,6 +103,9 @@ public class Main {
 
   }
 
+  /**
+   * function sets metal style
+   */
   public static void initMetalLook() {
     try {
       UIManager.setLookAndFeel(new MetalLookAndFeel());
@@ -91,6 +120,9 @@ public class Main {
     setting.repaint();
   }
 
+  /**
+   * function sets system style
+   */
   public static void initSystemLook() {
     try {
       String systemLook = UIManager.getSystemLookAndFeelClassName();
@@ -107,8 +139,39 @@ public class Main {
 
   }
 
+  /**
+   * function close a window setting
+   */
   public static void closeSetting() {
     setting.setVisible(false);
+  }
+
+  public static void startReplay() {
+    String path;
+
+    JFileChooser dialog = new JFileChooser(new File("SAVE"));
+    dialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    dialog.setApproveButtonText("Open");
+    dialog.setDialogTitle("Open save");
+    dialog.setDialogType(JFileChooser.OPEN_DIALOG);
+    dialog.setMultiSelectionEnabled(false);
+
+    if (dialog.showOpenDialog(mainWindow) == JFileChooser.APPROVE_OPTION) {
+      path = dialog.getSelectedFile().getName();
+    } else {
+      return;
+    }
+    menu.setVisible(false);
+    if (game != null) {
+      game.stop();
+      game = null;
+    }
+    game = new Game(-1, path);
+    mainWindow.setVisible(false);
+    mainWindow.add(game);
+    game.start();
+    mainWindow.pack();
+    mainWindow.setVisible(true);
   }
 
 }

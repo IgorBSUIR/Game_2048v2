@@ -15,8 +15,9 @@ import javax.swing.JPanel;
 
 public class Game extends JPanel implements Runnable {
 
-  private int hightScore = 0;
+  private int hightScore;
   public int level;
+  public boolean replay;
 
   private final int TIME = 50;
   private static final long serialVersionUID = 1L;
@@ -57,13 +58,22 @@ public class Game extends JPanel implements Runnable {
   private JButton menuButton;
   public static boolean autoGame;
 
-  public Game(int level) {
+  /**
+   * 
+   * level this parameter takes the difficulty level of the game constructor class
+   */
+  public Game(int level, String path) {
     setLayout(null);
     this.level = level;
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
-
-    board = new GameBoard(level);
-
+    switch (level) {
+      case -1:
+        board = new GameBoardReplay(path);
+        break;
+      default:
+        board = new GameBoard(level);
+        break;
+    }
     setBackground(Color.WHITE);
     menuButton = new JButton("Menu");
     menuButton.setBounds(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -77,16 +87,22 @@ public class Game extends JPanel implements Runnable {
     add(new TextLabel("2048", TEXT_NAME_X, TEXT_NAME_Y));
 
     scoreLabel = new TextLabel(Integer.toString(board.getScore()), SCORE_LBL_X, SCORE_LBL_Y);
+
     add(scoreLabel);
+
+    hightScore = Files.readScore();
 
     hightScoreLabel = new TextLabel(Integer.toString(hightScore), H_SCORE_LBL_X, H_SCORE_LBL_Y);
     add(hightScoreLabel);
 
     addKeyListener(new Keyboard());
     setFocusable(true);
+
   }
 
-
+  /**
+   * upgrade option board and score
+   */
   private void update() {
     board.update();
     updateScore();
@@ -99,29 +115,59 @@ public class Game extends JPanel implements Runnable {
     Graphics2D g2d = (Graphics2D) this.getGraphics();
     g2d.drawImage(image, IMAGE_X, IMAGE_Y, null);
     g2d.dispose();
+
   }
 
   private void updateScore() {
-    scoreLabel.setText(Integer.toString(board.getScore()));
-    if (hightScore < board.getScore()) {
-      hightScore = board.getScore();
-      hightScoreLabel.setText(Integer.toString(hightScore));
+    int score = board.getScore();
+    scoreLabel.setText(Integer.toString(score));
+
+    if (hightScore < score) {
+      hightScore = score;
+      Files.writeScore(hightScore);
+      hightScoreLabel.setText(Integer.toString(score));
     }
   }
 
   @Override
   public void run() {
     int time = TIME;
+    render();
+    try {
+      game.sleep(50);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     while (running) {
-      if (autoGame) {
-        if (time == TIME) {
-          getKeyAuto();
-        }
-        time--;
-        if (time == 0) {
-          time = TIME;
-        }
+      switch (level) {
+        case -1:
+          if (time == 0) {
+            board.incCount();
+            time = TIME;
+          }
+
+          time--;
+
+          if (board.getDead() && board.getWon()) {
+            running = false;
+            new FinalWindow("end");
+            return;
+          }
+
+          break;
+
+        default:
+          if (autoGame) {
+            if (time == 0) {
+              getKeyAuto();
+              time = TIME;
+            }
+
+            time--;
+          }
+          break;
       }
+
       if (board.getWon()) {
         new FinalWindow("won");
         running = false;
@@ -180,5 +226,8 @@ public class Game extends JPanel implements Runnable {
       default:
         break;
     }
+
   }
+
+
 }
