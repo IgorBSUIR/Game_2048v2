@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Files {
-  private final static String SCORE = "SCORE";
+  private final String SCORE = "SCORE";
   private String nameFile;
 
   public Files() {
@@ -30,7 +30,7 @@ public class Files {
     File file = new File("Save" + File.separator + path);
     StringBuilder string = new StringBuilder();
     String save;
-    int amount = 0;;
+    int amount = 0;
     if (!file.exists()) {
       return null;
     }

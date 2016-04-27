@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class GameBoardReplay extends GameBoard {
 
-  String save[];
+  String[] save;
   public static int amount;
   private int count;
   private int prev = 0;
