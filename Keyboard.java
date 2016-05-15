@@ -10,6 +10,9 @@ public class Keyboard implements KeyListener {
   @Override
   public void keyTyped(KeyEvent arg0) {}
 
+  /**
+   * check pressed key
+   */
   @Override
   public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_CONTROL) {

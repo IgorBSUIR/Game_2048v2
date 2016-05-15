@@ -66,7 +66,10 @@ public class FinalWindow extends JFrame {
 
     setVisible(true);
   }
-
+/**
+ * set event for button
+ * @param result final result
+ */
   private void setEvent(String result) {
     if (result.equals("end")) {
       okButton.addActionListener(new ActionListener() {
@@ -77,8 +80,9 @@ public class FinalWindow extends JFrame {
     } else {
       okButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          setVisible(false);
           Main.exitToMenu();
+          setVisible(false);
+          
         }
       });
     }

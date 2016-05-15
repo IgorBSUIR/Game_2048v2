@@ -8,17 +8,17 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class GameBoard {
-  Files file = new Files();
+  private Files file = new Files();
 
   public static final int LINES = 4;
   public static final int COLUMNS = 4;
 
   protected int score = 0;
-
+  private StringBuilder save = new StringBuilder();
   protected int startTiles = 2;
   protected Tile[][] board;
-  protected boolean won;
-  protected boolean dead;
+  protected boolean won = false;
+  protected boolean dead = false;
   protected BufferedImage gameBoard;
   protected BufferedImage finalBoard;
   protected final int X = 0;
@@ -77,6 +77,16 @@ public class GameBoard {
     }
     graphic.drawImage(finalBoard, X, Y, null);
     graphic_2.dispose();
+
+    for (int line = 0; line < LINES; line++) {
+      for (int column = 0; column < COLUMNS; column++) {
+        Tile current = board[line][column];
+        if (current == null) {
+          continue;
+        }
+        resetPosition(current, line, column);
+      }
+    }
   }
 
   /**
@@ -92,7 +102,6 @@ public class GameBoard {
         if (current == null) {
           continue;
         }
-        resetPosition(current, line, column);
         if (current.getValue() == 2048) {
           won = true;
         }
@@ -147,7 +156,7 @@ public class GameBoard {
    * @param horizontalDirection
    * @param verticalDirection
    * @param dir - direction
-   * @return
+   * @return can move tile
    */
   protected boolean move(int line, int column, int horizontalDirection, int verticalDirection,
       Direction dir) {
@@ -191,6 +200,14 @@ public class GameBoard {
     return canMove;
   }
 
+  /**
+   * Checking the location on the border of the board tiles
+   * 
+   * @param dir the direction of move
+   * @param line position of tile
+   * @param column position of tile
+   * @return true or false
+   */
   protected boolean checkOutOfBorder(Direction dir, int line, int column) {
     switch (dir) {
       case LEFT:
@@ -396,6 +413,7 @@ public class GameBoard {
    * randomly creating tiles
    * 
    * @param flag
+   * @param direction press key
    */
   private void spawnRandom(boolean flag, Direction dir) {
     Random random = new Random();
@@ -415,9 +433,48 @@ public class GameBoard {
         Tile tile = new Tile(value, getTileX(column), getTileY(line));
         board[line][column] = tile;
         notValid = false;
-        file.writeSave(dir, value, line, column);
+        save.append(convertToString(dir, value, line, column));
       }
+
     }
+  }
+
+  /**
+   * convert information to String for files
+   * 
+   * @param dir
+   * @param value
+   * @param line
+   * @param column
+   * @return step
+   */
+  private String convertToString(Direction dir, int value, int line, int column) {
+    String string = new String();
+    switch (dir) {
+
+      case LEFT:
+        string =
+            "1" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
+        break;
+      case RIGHT:
+        string =
+            "2" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
+        break;
+      case UP:
+        string =
+            "3" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
+        break;
+      case DOWN:
+        string =
+            "4" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
+        break;
+      default:
+        string =
+            "0" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
+        break;
+    }
+
+    return string;
   }
 
   /**
@@ -441,7 +498,7 @@ public class GameBoard {
   }
 
   /**
-   * returns dead
+   * returns value of dead
    * 
    * @return
    */
@@ -450,7 +507,7 @@ public class GameBoard {
   }
 
   /**
-   * returns won
+   * returns value of won
    * 
    * @return
    */
@@ -467,12 +524,13 @@ public class GameBoard {
     return score;
   }
 
-  public boolean isMove() {
-    return canMove;
-  }
+  void incCount() {}
 
-  void incCount() {
-    // TODO Auto-generated method stub
+  /**
+   * Calling the file recording
+   */
+  public void writeInFile() {
+    file.writeSave(save.toString(), score);
   }
 
 }

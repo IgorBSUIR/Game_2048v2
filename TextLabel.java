@@ -7,7 +7,9 @@ import javax.swing.JLabel;
 public class TextLabel extends JLabel {
 
   private static final long serialVersionUID = 1L;
-
+  /**
+   * class for text
+   */
   private final int HEIGHT = 40;
   private final int WIDTH = 200;
 

@@ -40,6 +40,9 @@ public class Level extends JFrame {
   private final int hardButtonWight = 20;
   private final int hardButtonHeight = 20;
 
+  /**
+   * panel choosing level
+   */
   public Level() {
     setLocationRelativeTo(null);
     setTitle("Level");
@@ -65,6 +68,9 @@ public class Level extends JFrame {
     setEvent();
   }
 
+  /**
+   * set Event for Button
+   */
   private void setEvent() {
 
     okButton.addActionListener(new ActionListener() {
@@ -92,6 +98,11 @@ public class Level extends JFrame {
     });
   }
 
+  /**
+   * get selected level
+   * 
+   * @return selected level
+   */
   public int getLevel() {
     return level;
   }

@@ -39,6 +39,9 @@ public class LookSetting extends JFrame {
   private final int SYSTEM_B_WIDTH = 20;
   private final int SYSTEM_B_HEIGHT = 20;
 
+  /**
+   * panel choosing look style
+   */
   public LookSetting() {
     this.setTitle("Setting");
     setSize(WIDTH, HEIGHT);
@@ -58,12 +61,15 @@ public class LookSetting extends JFrame {
 
     add(new TextLabel("System LookAndFeel", SYSTEM_X, SYSTEM_Y));
     systemRadioButton = new JRadioButton("System");
-    systemRadioButton.setBounds(SYSTEM_B_X, SYSTEM_B_Y, SYSTEM_B_WIDTH, SYSTEM_B_HEIGHT);;
+    systemRadioButton.setBounds(SYSTEM_B_X, SYSTEM_B_Y, SYSTEM_B_WIDTH, SYSTEM_B_HEIGHT);
     add(systemRadioButton);
 
     setEvent();
   }
 
+  /**
+   * set Event for button
+   */
   private void setEvent() {
 
     okButton.addActionListener(new ActionListener() {

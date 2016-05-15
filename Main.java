@@ -1,5 +1,7 @@
 package by.bsuir.igor;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -24,11 +26,21 @@ public class Main {
   public static void main(String[] args) {
     mainWindow = new JFrame("2048");
     menu = new Menu();
-    mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainWindow.setLocationRelativeTo(null);
+
     mainWindow.add(menu);
     mainWindow.pack();
     mainWindow.setVisible(true);
+
+    mainWindow.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        if (game != null) {
+          game.stop();
+        }
+        System.exit(0);
+      }
+    });
 
   }
 
@@ -54,6 +66,7 @@ public class Main {
    * function opens a window game
    */
   public static void exitToMenu() {
+    System.out.print("121222");
     game.stop();
     game.setVisible(false);
     menu.setVisible(true);
@@ -146,6 +159,9 @@ public class Main {
     setting.setVisible(false);
   }
 
+  /**
+   * function star replay
+   */
   public static void startReplay() {
     String path;
 

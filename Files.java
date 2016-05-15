@@ -2,31 +2,39 @@ package by.bsuir.igor;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Files {
-  private final String SCORE = "SCORE";
+  /**
+   * this class for work with files
+   */
+  private static final String SCORE = "SCORE";
   private String nameFile;
 
   public Files() {
     StringBuilder string = new StringBuilder();
     string.append(new SimpleDateFormat().format(Calendar.getInstance().getTime()));
 
-    nameFile = "Save" + File.separator + string.toString().replaceAll("\\:|\\.|\\ |", "") + ".save";
+    nameFile = 
+        "Save" + File.separator + string.toString().replaceAll("\\:|\\.|\\ |", "") + ".save";
     File file = new File("Save");
-
+    
     if (!file.exists()) {
       file.mkdirs();
     }
   }
 
-  public static String[] readSave(String path) {
+  /**
+   * read save from file
+   * 
+   * @param path
+   * @return
+   */
+  public static String readSave(String path) {
     File file = new File("Save" + File.separator + path);
     StringBuilder string = new StringBuilder();
     String save;
@@ -38,7 +46,6 @@ public class Files {
       BufferedReader in = new BufferedReader(new FileReader(file.getAbsoluteFile()));
       try {
         while ((save = in.readLine()) != null) {
-          amount++;
           string.append(save);
         }
       } finally {
@@ -47,10 +54,15 @@ public class Files {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    GameBoardReplay.amount = amount;
-    return string.toString().split(";");
+    GameBoardReplay.amount = amount - 1;
+    return string.toString();
   }
 
+  /**
+   * write hightscore in file
+   * 
+   * @param score
+   */
   public static void writeScore(int score) {
     File file = new File(SCORE);
     try {
@@ -70,6 +82,11 @@ public class Files {
     }
   }
 
+  /**
+   * read hightscore from file
+   * 
+   * @return hightscore
+   */
   public static int readScore() {
     String score;
     File file = new File(SCORE);
@@ -89,15 +106,25 @@ public class Files {
     return Integer.valueOf(score);
   }
 
-  public void writeSave(Direction dir, int value, int line, int column) {
+  /**
+   * write step in file
+   * 
+   * @param dir key
+   * @param value value new tile
+   * @param line line new tile
+   * @param column column new tile
+   */
+  public void writeSave(String save, int score) {
+
     File file = new File(nameFile);
     try {
-      if (!file.exists()) {
-        file.createNewFile();
+      if (file.exists()) {
+        file.delete();
       }
-      PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, true)));
+      PrintWriter out = new PrintWriter(file.getAbsoluteFile());
       try {
-        out.println(convertToString(dir, value, line, column));
+        out.println(Integer.toString(score) + ";");
+        out.print(save);
       } finally {
         out.close();
       }
@@ -106,32 +133,38 @@ public class Files {
     }
   }
 
-  private String convertToString(Direction dir, int value, int line, int column) {
-    String string = new String();
-    switch (dir) {
-      
-      case LEFT:
-        string =
-            "1" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
-        break;
-      case RIGHT:
-        string =
-            "2" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
-        break;
-      case UP:
-        string =
-            "3" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
-        break;
-      case DOWN:
-        string =
-            "4" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
-        break;
-      default:
-        string =
-            "0" + Integer.toString(value) + Integer.toString(line) + Integer.toString(column) + ';';
-        break;
+  /**
+   * get information about all games from files
+   * 
+   * @return information about games
+   */
+  public static GameInfo[] getInfoFiles() {
+
+    File directory = new File("Save");
+    File[] files = directory.listFiles();
+
+    GameInfo[] gamesInfo = new GameInfo[files.length];
+    for (int i = 0; i < files.length; i++) {
+      gamesInfo[i] = new GameInfo();
+      gamesInfo[i].setName(files[i].getName());
+
+      File file = new File("Save" + File.separator + gamesInfo[i].getName());
+      if (!file.exists()) {
+        return null;
+      }
+      try {
+        BufferedReader in = new BufferedReader(new FileReader(file.getAbsoluteFile()));
+        try {
+          gamesInfo[i].setScore(Integer.valueOf(in.readLine().replaceAll(";", "")));
+          gamesInfo[i].setSteps(in.readLine());
+        } finally {
+          in.close();
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
 
-    return string.toString();
+    return gamesInfo;
   }
 }

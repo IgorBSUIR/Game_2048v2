@@ -9,20 +9,23 @@ public class GameBoardReplay extends GameBoard {
   private int count;
   private int prev = 0;
 
+  /**
+   * 
+   * @param path the name of save
+   */
   public GameBoardReplay(String path) {
     super();
     board = new Tile[LINES][COLUMNS];
     gameBoard = new BufferedImage(BOARD_WIDTH, BOARD_HEIGHT, BufferedImage.TYPE_INT_RGB);
     finalBoard = new BufferedImage(BOARD_WIDTH, BOARD_HEIGHT, BufferedImage.TYPE_INT_RGB);
     createBoardImage();
-    save = Files.readSave(path);
-    count = 0;
-    
+    save = Files.readSave(path).split(";");
+    count = 1;
     while (save[count].charAt(0) == '0') {
       spawn(Integer.valueOf(save[count].charAt(1) + ""),
-          Integer.valueOf(save[count].charAt(2) + ""), 
+          Integer.valueOf(save[count].charAt(2) + ""),
           Integer.valueOf(save[count].charAt(3) + ""));
-      
+
       count++;
       if (count == amount) {
         break;
@@ -30,12 +33,22 @@ public class GameBoardReplay extends GameBoard {
     }
   }
 
+  /**
+   * created tile
+   * 
+   * @param value tile
+   * @param line, where tail is located
+   * @param column
+   */
   private void spawn(int value, int line, int column) {
     board[line][column] = new Tile(value, getTileX(column), getTileY(line));
   }
 
+  /**
+   * function update board and check whether the replay has end
+   */
   void update() {
-    if (count >= amount) {
+    if (count >= save.length) {
       won = true;
       dead = true;
       return;
@@ -47,7 +60,6 @@ public class GameBoardReplay extends GameBoard {
         if (current == null) {
           continue;
         }
-        resetPosition(current, line, column);
         if (current.getValue() == 2048) {
           won = true;
         }
@@ -56,6 +68,9 @@ public class GameBoardReplay extends GameBoard {
 
   }
 
+  /**
+   * get a pressed keys
+   */
   private void checkKeys() {
 
     if (count == prev) {
@@ -77,6 +92,11 @@ public class GameBoardReplay extends GameBoard {
     }
   }
 
+  /**
+   * offset function tiles on the board in a certain direction
+   * 
+   * @param dir - direction
+   */
   private void movingTiles(Direction dir) {
     canMove = false;
     int horizontalDirection = 0;
@@ -156,6 +176,9 @@ public class GameBoardReplay extends GameBoard {
     }
   }
 
+  /**
+   * go to the next step
+   */
   public void incCount() {
     count++;
   }

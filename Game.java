@@ -48,7 +48,9 @@ public class Game extends JPanel implements Runnable {
   private final int BUTTON_HEIGHT = 30;
 
   public static final Font main = new Font("FONT", Font.PLAIN, 28);
+
   private Thread game;
+  public ScoreUpdate upScore;
   private TextLabel scoreLabel;
   private TextLabel hightScoreLabel;
   private boolean running;
@@ -57,6 +59,7 @@ public class Game extends JPanel implements Runnable {
   private GameBoard board;
   private JButton menuButton;
   public static boolean autoGame;
+
 
   /**
    * 
@@ -97,15 +100,16 @@ public class Game extends JPanel implements Runnable {
 
     addKeyListener(new Keyboard());
     setFocusable(true);
-
   }
 
   /**
-   * upgrade option board and score
+   * update option board
    */
   private void update() {
-    board.update();
-    updateScore();
+    synchronized (scoreLabel) {
+      board.update();
+    }
+
   }
 
   private void render() {
@@ -118,6 +122,9 @@ public class Game extends JPanel implements Runnable {
 
   }
 
+  /**
+   * update score in window
+   */
   private void updateScore() {
     int score = board.getScore();
     scoreLabel.setText(Integer.toString(score));
@@ -132,13 +139,9 @@ public class Game extends JPanel implements Runnable {
   @Override
   public void run() {
     int time = TIME;
-    render();
-    try {
-      game.sleep(50);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+   
     while (running) {
+
       switch (level) {
         case -1:
           if (time == 0) {
@@ -150,8 +153,6 @@ public class Game extends JPanel implements Runnable {
 
           if (board.getDead() && board.getWon()) {
             running = false;
-            new FinalWindow("end");
-            return;
           }
 
           break;
@@ -165,19 +166,25 @@ public class Game extends JPanel implements Runnable {
 
             time--;
           }
+          if (board.getWon()) {
+            running = false;
+          }
+          if (board.getDead()) {
+            running = false;
+          }
           break;
-      }
-
-      if (board.getWon()) {
-        new FinalWindow("won");
-        running = false;
-      }
-      if (board.getDead()) {
-        new FinalWindow("dead");
-        running = false;
       }
       update();
       render();
+    }
+
+    switch (level) {
+      case -1:
+        new FinalWindow("end");
+        break;
+      default:
+        new FinalWindow(board.getWon() ? "won" : "dead");
+        break;
     }
   }
 
@@ -185,18 +192,28 @@ public class Game extends JPanel implements Runnable {
     if (running) {
       return;
     }
+    upScore = new ScoreUpdate();
     running = true;
     game = new Thread(this, "Game 2048");
     game.start();
-
   }
 
+  /**
+   * this function stop game
+   */
   public synchronized void stop() {
     if (!running) {
+      if (level != -1) {
+        board.writeInFile();
+      }
       return;
     }
+    
     running = false;
     game = null;
+    if (level != -1) {
+      board.writeInFile();
+    }
   }
 
   private void setAction() {
@@ -208,6 +225,9 @@ public class Game extends JPanel implements Runnable {
     });
   }
 
+  /**
+   * in this function get press key for bot
+   */
   private void getKeyAuto() {
     Random random = new Random();
     switch (random.nextInt(4)) {
@@ -230,4 +250,23 @@ public class Game extends JPanel implements Runnable {
   }
 
 
+  private class ScoreUpdate implements Runnable {
+
+    Thread update = null;
+    public ScoreUpdate() {
+      if (update == null) {
+        update = new Thread(this);
+        update.start();
+      }
+    }
+
+    @Override
+    public void run() {
+      while (running) {
+        synchronized (scoreLabel) {
+          updateScore();
+        }
+      }
+    }
+  }
 }
