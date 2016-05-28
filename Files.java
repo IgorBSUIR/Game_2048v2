@@ -19,10 +19,9 @@ public class Files {
     StringBuilder string = new StringBuilder();
     string.append(new SimpleDateFormat().format(Calendar.getInstance().getTime()));
 
-    nameFile = 
-        "Save" + File.separator + string.toString().replaceAll("\\:|\\.|\\ |", "") + ".save";
+    nameFile = "Save" + File.separator + string.toString().replaceAll("\\:|\\.|\\ |", "") + ".save";
     File file = new File("Save");
-    
+
     if (!file.exists()) {
       file.mkdirs();
     }
@@ -31,31 +30,28 @@ public class Files {
   /**
    * read save from file
    * 
-   * @param path
+   * @param name save
    * @return
    */
-  public static String readSave(String path) {
-    File file = new File("Save" + File.separator + path);
-    StringBuilder string = new StringBuilder();
-    String save;
-    int amount = 0;
+  public static GameInfo readSave(String name) {
+    File file = new File("Save" + File.separator + name);
+    GameInfo gameInfo = new GameInfo();
+    gameInfo.setName(name);
     if (!file.exists()) {
       return null;
     }
     try {
       BufferedReader in = new BufferedReader(new FileReader(file.getAbsoluteFile()));
       try {
-        while ((save = in.readLine()) != null) {
-          string.append(save);
-        }
+        gameInfo.setScore(Integer.valueOf(in.readLine().replaceAll(";", "")));
+        gameInfo.setSteps(in.readLine());
       } finally {
         in.close();
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    GameBoardReplay.amount = amount - 1;
-    return string.toString();
+    return gameInfo;
   }
 
   /**

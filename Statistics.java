@@ -101,9 +101,10 @@ public class Statistics {
     setEvents();
 
   }
-/**
- * shows the statistics
- */
+
+  /**
+   * shows the statistics
+   */
   private void setStatistics() {
     JLabel maxSteps = new JLabel(MAX_STEPS_TEXT + new ScalaStatistics().max(gamesInfo));
     maxSteps.setBounds(MAX_STEPS_X, MAX_STEPS_Y, MAX_STEPS_WIDTH, MAX_STEPS_HEIGHT);

@@ -19,11 +19,11 @@ public class GameBoardReplay extends GameBoard {
     gameBoard = new BufferedImage(BOARD_WIDTH, BOARD_HEIGHT, BufferedImage.TYPE_INT_RGB);
     finalBoard = new BufferedImage(BOARD_WIDTH, BOARD_HEIGHT, BufferedImage.TYPE_INT_RGB);
     createBoardImage();
-    save = Files.readSave(path).split(";");
-    count = 1;
+    save = Files.readSave(path).getSteps().split(";");
+    count = 0;
     while (save[count].charAt(0) == '0') {
       spawn(Integer.valueOf(save[count].charAt(1) + ""),
-          Integer.valueOf(save[count].charAt(2) + ""),
+          Integer.valueOf(save[count].charAt(2) + ""), 
           Integer.valueOf(save[count].charAt(3) + ""));
 
       count++;
@@ -170,7 +170,8 @@ public class GameBoardReplay extends GameBoard {
 
     if (canMove) {
       spawn(Integer.valueOf(save[count].charAt(1) + ""),
-          Integer.valueOf(save[count].charAt(2) + ""), Integer.valueOf(save[count].charAt(3) + ""));
+          Integer.valueOf(save[count].charAt(2) + ""), 
+          Integer.valueOf(save[count].charAt(3) + ""));
       prev = count;
       checkDead();
     }

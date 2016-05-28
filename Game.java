@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 public class Game extends JPanel implements Runnable {
@@ -68,6 +69,8 @@ public class Game extends JPanel implements Runnable {
   public Game(int level, String path) {
     setLayout(null);
     this.level = level;
+    JDialog dia= new JDialog();
+ 
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
     switch (level) {
       case -1:

@@ -18,6 +18,7 @@ public class Menu extends JPanel {
   private JButton sittingButton;
   private JButton exitButton;
   private JButton statisticsButton;
+  private JButton annotationButton;
 
   private final int WIDTH = 320;
   private final int HEIGHT = 320;
@@ -52,8 +53,13 @@ public class Menu extends JPanel {
   private final int SETTING_B_WIDTH = 160;
   private final int SETTING_B_HEIGHT = 30;
 
+  private final int ANNOTATION_B_X = 80;
+  private final int ANNOTATION_B_Y = 240;
+  private final int ANNOTATION_B_WIDTH = 160;
+  private final int ANNOTATION_B_HEIGHT = 30;
+
   private final int EXIT_B_X = 80;
-  private final int EXIT_B_Y = 240;
+  private final int EXIT_B_Y = 280;
   private final int EXIT_B_WIDTH = 160;
   private final int EXIT_B_HEIGHT = 30;
 
@@ -86,6 +92,11 @@ public class Menu extends JPanel {
     sittingButton = new JButton("Setting");
     sittingButton.setBounds(SETTING_B_X, SETTING_B_Y, SETTING_B_WIDTH, SETTING_B_HEIGHT);
     add(sittingButton);
+
+    annotationButton = new JButton("Read annotation");
+    annotationButton.setBounds(ANNOTATION_B_X, ANNOTATION_B_Y, ANNOTATION_B_WIDTH,
+        ANNOTATION_B_HEIGHT);
+    add(annotationButton);
 
     exitButton = new JButton("Exit");
     exitButton.setBounds(EXIT_B_X, EXIT_B_Y, EXIT_B_WIDTH, EXIT_B_HEIGHT);
@@ -137,6 +148,16 @@ public class Menu extends JPanel {
       public void actionPerformed(ActionEvent arg0) {
         new Statistics();
       }
+    });
+
+    annotationButton.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        new Convert();
+
+      }
+
     });
 
   }

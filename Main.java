@@ -31,7 +31,8 @@ public class Main {
     mainWindow.add(menu);
     mainWindow.pack();
     mainWindow.setVisible(true);
-
+    GameInfo[] games = Files.getInfoFiles();
+    new AnnotationConvert().convert(games[0]);
     mainWindow.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
