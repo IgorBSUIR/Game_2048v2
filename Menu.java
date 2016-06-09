@@ -67,8 +67,9 @@ public class Menu extends JPanel {
    * constructor
    */
   public Menu() {
+    
     setLayout(null);
-    JLabel imageLabel = new JLabel(new ImageIcon("pr_source.png"));
+    JLabel imageLabel = new JLabel(new ImageIcon("res/pr_source.png"));
     imageLabel.setBounds(IMAGE_X, IMAGE_Y, IMAGE_WIDTH, IMAGE_HEIGHT);
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
@@ -93,7 +94,7 @@ public class Menu extends JPanel {
     sittingButton.setBounds(SETTING_B_X, SETTING_B_Y, SETTING_B_WIDTH, SETTING_B_HEIGHT);
     add(sittingButton);
 
-    annotationButton = new JButton("Read annotation");
+    annotationButton = new JButton("Read notation");
     annotationButton.setBounds(ANNOTATION_B_X, ANNOTATION_B_Y, ANNOTATION_B_WIDTH,
         ANNOTATION_B_HEIGHT);
     add(annotationButton);

@@ -5,11 +5,11 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JApplet;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class FinalWindow extends JFrame {
+public class FinalWindow extends JApplet {
 
   private JButton okButton;
   private JLabel text;
@@ -32,9 +32,7 @@ public class FinalWindow extends JFrame {
   public FinalWindow(String result) {
     setSize(WIDTH, HEIGHT);
     setLayout(null);
-    setTitle("End Game");
-    setLocationRelativeTo(null);
-
+    
     text = new JLabel();
 
     text.setFont(new Font("FONT", Font.PLAIN, 32));
