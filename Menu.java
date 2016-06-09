@@ -68,7 +68,7 @@ public class Menu extends JPanel {
    */
   public Menu() {
     setLayout(null);
-    JLabel imageLabel = new JLabel(new ImageIcon("pr_source.png"));
+    JLabel imageLabel = new JLabel(new ImageIcon("res/pr_source.png"));
     imageLabel.setBounds(IMAGE_X, IMAGE_Y, IMAGE_WIDTH, IMAGE_HEIGHT);
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
